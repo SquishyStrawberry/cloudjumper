@@ -5,9 +5,6 @@ __pycache__/
 # C extensions
 *.so
 
-# Work-In-Progress
-api.py
-
 # Distribution / packaging
 .Python
 env/
