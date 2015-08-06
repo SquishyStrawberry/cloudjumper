@@ -1,0 +1,13 @@
+{
+    "login": {
+        "user": "MysteriousUser",
+        "nick": "MysteriousNick",
+        "host": "irc.editingarchive.com",
+        "channel": "#bottest"
+    },
+    "modules": {
+        "message": {
+            "message": "Hello World!"
+        }
+    }
+}

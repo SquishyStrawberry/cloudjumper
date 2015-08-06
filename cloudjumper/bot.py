@@ -18,7 +18,6 @@ class Cloudjumper(irc.IRCBot):
         if block_data.get("message", ""):    
             # This checks both for it being truthy and it being in the dict.
             command = self.split_command(block_data["message"])
-            print(command, self.modules)
             for module in self.modules:
                 try:
                     res = module(command)
@@ -55,6 +54,5 @@ class Cloudjumper(irc.IRCBot):
     
 
 if __name__ == "__main__":
-    bot = Cloudjumper("lol", "lol", "#bottest", "irc.editingarchive.com")
-    bot.load_file("example")
+    bot = Cloudjumper("MysteriousUser", "MysteriousNick", "#HTTYD", "irc.editingarchive.com")
     bot.run()
