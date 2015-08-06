@@ -2,16 +2,18 @@
 import api
 import importlib
 import irc
+import logging
 import os
 import sqlite3
 import sys
+
+logging.getLogger(irc.__name__).setLevel(logging.INFO)
 
 
 class Cloudjumper(irc.IRCBot):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.logger.setLevel(irc.logging.DEBUG)
         self.modules  = set()
    
     def extra_handling(self, block_data):
@@ -48,7 +50,7 @@ class Cloudjumper(irc.IRCBot):
         name = name[:-3]
         module = importlib.import_module(name)
         for i in module.__dict__.values():
-            if getattr(i, "is_module", False):  # TODO Get a proper one.
+            if issubclass(i, api.Module):  # Always returns False.
                 self.modules.add(i(self))
         os.chdir(origin)
     
