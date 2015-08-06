@@ -16,7 +16,8 @@ def main(name):
         login["nick"],
         login["channel"],
         login["host"],
-        login.get("port", None)
+        login.get("port", None),
+        debug=config["settings"].get("debug", False)
     )
     bot.run()
 

@@ -5,9 +5,10 @@
         "host": "irc.editingarchive.com",
         "channel": "#bottest"
     },
+    "settings": {
+        "debug": true
+    },
     "modules": {
-        "message": {
-            "message": "Hello World!"
-        }
+        
     }
 }

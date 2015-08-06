@@ -18,6 +18,8 @@ logging.getLogger(irc.__name__).setLevel(logging.INFO)
 class Cloudjumper(irc.IRCBot):
 
     def __init__(self, *args, **kwargs):
+        if kwargs.get("debug", False):
+            logging.getLogger(irc.__name__).setLevel(logging.DEBUG)
         super().__init__(*args, **kwargs)
         self.modules = [cls(self) for cls in modules]
 
