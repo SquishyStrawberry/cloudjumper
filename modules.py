@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from _modules.shower import Shower
+from _modules.terminate import Terminator
 
-modules = (Shower,)
+modules = (Terminator,)
 
