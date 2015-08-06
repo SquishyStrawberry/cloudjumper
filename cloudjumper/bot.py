@@ -4,6 +4,8 @@ import logging
 import os
 import sqlite3
 import sys
+import irc
+import modules
 
 logging.getLogger(irc.__name__).setLevel(logging.INFO)
 
@@ -12,7 +14,7 @@ class Cloudjumper(irc.IRCBot):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.modules  = set()
+        self.modules = [cls(self) for cls in modules.modules]
    
     def extra_handling(self, block_data):
         if block_data.get("message", ""):    
