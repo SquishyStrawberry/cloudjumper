@@ -22,6 +22,7 @@ class Cloudjumper(irc.IRCBot):
             logging.getLogger(irc.__name__).setLevel(logging.DEBUG)
         super().__init__(*args, **kwargs)
         self.modules = [cls(self) for cls in modules]
+        self.config = kwargs.get("config", {})
 
     def extra_handling(self, block_data):
         if block_data.get("message", ""):    
@@ -47,4 +48,7 @@ class Cloudjumper(irc.IRCBot):
             "command": args[0], 
             "args": [i for i in args[1:] if i]
         }
+
+    def get_message(self, name):
+        return self.config.get("messages", {}).get(name, "No message found!")
  
