@@ -40,7 +40,7 @@ class Cloudjumper(irc.IRCBot):
         name = raw_message.split()[0].lower()
         if name.endswith("!"):
             name = name[:-1]
-        args = raw_message.split()[1 if name == self.nick else 0:]
+        args = raw_message.split()[1 if name == self.nick.lower() else 0:]
         if args[0] == "!":
             del args[0]
         return {
