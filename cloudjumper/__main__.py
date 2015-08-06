@@ -11,13 +11,14 @@ def main(name):
     with open(name) as config_file:
         config = json.load(config_file)
     login = config["login"]
-    Cloudjumper(
+    bot = Cloudjumper(
         login["user"],
         login["nick"],
         login["channel"],
         login["host"],
         login.get("port", None)
-    ).run()
+    )
+    bot.run()
 
 if __name__ == "__main__":
     main(CONFIG_NAME)

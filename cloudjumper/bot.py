@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-import api
 import importlib
-import irc
 import logging
 import os
 import sqlite3
@@ -40,21 +38,4 @@ class Cloudjumper(irc.IRCBot):
             "command": args[0], 
             "args": [i for i in args[1:] if i]
         }
-
-    def load_file(self, name):
-        origin = os.getcwd()
-        if not name.endswith(".py"):
-            name += ".py"
-        os.chdir(os.sep.join(os.path.abspath(name).split(os.sep)[:-1]))
-        sys.path.insert(0, os.getcwd())
-        name = name[:-3]
-        module = importlib.import_module(name)
-        for i in module.__dict__.values():
-            if issubclass(i, api.Module):  # Always returns False.
-                self.modules.add(i(self))
-        os.chdir(origin)
-    
-
-if __name__ == "__main__":
-    bot = Cloudjumper("MysteriousUser", "MysteriousNick", "#HTTYD", "irc.editingarchive.com")
-    bot.run()
+ 
