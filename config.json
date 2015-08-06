@@ -1,16 +1,16 @@
 {
     "login": {
-        "user": "MysteriousUser",
-        "nick": "MysteriousNick",
+        "user": "CloudJumpah",
+        "nick": "Cloudjumper",
         "host": "irc.editingarchive.com",
-        "channel": "#bottest"
+        "channel": "#httyd"
     },
     "settings": {
         "debug": true
     },
     "modules": {
         "calc": {
-            
+            "timeout": 5 
         }
     },
     "messages": {      

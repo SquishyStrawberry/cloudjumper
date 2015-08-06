@@ -65,8 +65,12 @@ class Calculator(object):
     def __call__(self, command):
         if command["command"] != "calc":
             return
-        res = self.calculate(command.get("args", ["0"]))
-        return self.bot.get_message("calc_result").format(res)
+        exprs = command.get("args", ["0"])
+        try:
+            res = self.calculate(exprs)
+            return self.bot.get_message("calc_result").format(res)
+        except (TimeoutError, ValueError, IndexError) as e:
+            return self.bot.get_message("calc_error").format(e)
 
     def call(self, func, *args):
         try:
@@ -75,8 +79,7 @@ class Calculator(object):
             res = sys.exc_info()[1]
         self.pipe[1].send(res)
 
-
-
 for k, v in Calculator.aliases.items():
     for i in set(v):
         Calculator.expressions[i] = Calculator.expressions[k]
+

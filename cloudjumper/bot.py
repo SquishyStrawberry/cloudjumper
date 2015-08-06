@@ -21,8 +21,11 @@ class Cloudjumper(irc.IRCBot):
         if kwargs.get("debug", False):
             logging.getLogger(irc.__name__).setLevel(logging.DEBUG)
         super().__init__(*args, **kwargs)
-        self.modules = [cls(self) for cls in modules]
-        self.config = kwargs.get("config", {})
+        self.config  = kwargs.get("config", {})
+        self.modules = [
+                        cls(self, self.config["modules"][cls.name]) 
+                        for cls in modules
+        ]
 
     def extra_handling(self, block_data):
         if block_data.get("message", ""):    
