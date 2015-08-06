@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 import importlib
+import irc
 import logging
 import os
 import sqlite3
 import sys
-import irc
 try:
     if os.getcwd() not in sys.path:
         sys.path.insert(0, os.getcwd())
-    from cloudjumper_modules import modules
+    from modules import modules
 except ImportError as e:
     modules = ()
 
