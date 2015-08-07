@@ -23,7 +23,7 @@ class Cloudjumper(irc.IRCBot):
         super().__init__(*args, **kwargs)
         self.config  = kwargs.get("config", {})
         self.modules = [
-                        cls(self, self.config["modules"][cls.name]) 
+                        cls(self, self.config["modules"].get(cls.name, {})) 
                         for cls in modules
         ]
 
@@ -32,10 +32,8 @@ class Cloudjumper(irc.IRCBot):
             # This checks both for it being truthy and it being in the dict.
             command = self.split_command(block_data["message"])
             for module in self.modules:
-                try:
+                if command.get("command").lower() == module.command.lower():
                     res = module(command)
-                except NotImplementedError:
-                    continue
                 if res is not None:
                     self.send_action(res)
         return block_data

@@ -4,38 +4,42 @@ import sys
 import math
 import multiprocessing
 
+# Polyfill for TimeoutError
+_timeout = type("TimeoutError", (Exception,), {})
+TimeoutError = globals().get("TimeoutError", _timeout)
 
-class Calculator(object):
+class Calculator(object): 
+    name        = "calc"
+    command     = "calc"
     expressions = {
-        "%": (operator.mod, 2),
-        "*": (operator.mul, 2),
-        "**": (pow, 2),
-        "+": (operator.add, 2),
-        "-": (operator.sub, 2),
-        "/": (operator.truediv, 2),
+        "%":         (operator.mod, 2),
+        "*":         (operator.mul, 2),
+        "**":        (operator.pow, 2),
+        "+":         (operator.add, 2),
+        "-":         (operator.sub, 2),
+        "/":         (operator.truediv, 2),
         "factorial": (math.factorial, 1),
-        "log": (math.log, 2),
-        "sqrt": (math.sqrt, 1),
-        "xor": (operator.xor, 2),
-        "and": (operator.and_, 2),
-        "or": (operator.or_, 2),
-        "not": (operator.not_, 1),
+        "log":       (math.log, 2),
+        "sqrt":      (math.sqrt, 1),
+        "xor":       (operator.xor, 2),
+        "and":       (operator.and_, 2),
+        "or":        (operator.or_, 2),
+        "not":       (operator.not_, 1),
     }
     # Should these be in the config?
-    aliases = {
-        "*": "xX✕",
-        "**": "^",
-        "-": "−—–—‒",
-        "/": "∕÷",
+    aliases     = {
+        "*":         "xX✕",
+        "**":         "^",
+        "-":         "−—–—‒",
+        "/":         "∕÷",
         "factorial": "!",
-        "sqrt": "√",
+        "sqrt":      "√",
     }
 
     def __init__(self, bot, config={}):
         self.bot     = bot
         self.timeout = config.get("timeout", 15)
         self.pipe    = multiprocessing.Pipe(False)
-        self.results = {}
 
     def calculate(self, expressions):
         stack = []
@@ -59,6 +63,8 @@ class Calculator(object):
                 if proc.is_alive():
                     raise TimeoutError
                 res = self.pipe[0].recv()
+                if isinstance(res, BaseException):
+                    raise res
                 stack.append(res)
         return stack[-1]
 
@@ -68,6 +74,8 @@ class Calculator(object):
         exprs = command.get("args", ["0"])
         try:
             res = self.calculate(exprs)
+            if command.get("sender"):
+                self.results[command["sender"]] = res
             return self.bot.get_message("calc_result").format(res)
         except (TimeoutError, ValueError, IndexError) as e:
             return self.bot.get_message("calc_error").format(e)
