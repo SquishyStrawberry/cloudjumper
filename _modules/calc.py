@@ -18,13 +18,13 @@ class Calculator(object):
         "+":         (operator.add, 2),
         "-":         (operator.sub, 2),
         "/":         (operator.truediv, 2),
+        "and":       (operator.and_, 2),
         "factorial": (math.factorial, 1),
         "log":       (math.log, 2),
+        "not":       (operator.not_, 1),
+        "or":        (operator.or_, 2),
         "sqrt":      (math.sqrt, 1),
         "xor":       (operator.xor, 2),
-        "and":       (operator.and_, 2),
-        "or":        (operator.or_, 2),
-        "not":       (operator.not_, 1),
     }
     # Should these be in the config?
     aliases     = {
@@ -51,6 +51,7 @@ class Calculator(object):
                 if expr.is_integer():
                     expr = int(expr)
                 stack.append(expr)
+            # Easier than a float-check.
             except (ValueError, TypeError):
                 if expr not in self.expressions:
                     raise ValueError                    
@@ -66,9 +67,11 @@ class Calculator(object):
                 if isinstance(res, BaseException):
                     raise res
                 stack.append(res)
+        if len(stack) > 1:
+            raise ValueError
         return stack[-1]
 
-    def __call__(self, command):
+    def handle_message(self, command):
         if command["command"] != "calc":
             return
         exprs = command.get("args", ["0"])

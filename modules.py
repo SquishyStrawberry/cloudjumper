@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-from _modules.terminate import Terminator
-from _modules.calc import Calculator
+from _modules.greeter import Greeter
 
-modules = (Terminator, Calculator)
+modules = (Greeter,)
 
