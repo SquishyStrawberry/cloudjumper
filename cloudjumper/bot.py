@@ -44,9 +44,7 @@ class Cloudjumper(irc.IRCBot):
             args = self.split_command(msg, spect["delimiter"])
             if (spect["args"] == -1 or spect["args"] == len(args["args"])) and \
                (spect["command"] is None or args["command"] == spect["command"]):
-                spect["handler"](block_data.get("sender"), 
-                                 args["command"],
-                                 args["args"])
+                spect["handler"](block_data.get("sender"), args["args"])
         return block_data
 
     def subscribe(self, publisher,  handler, args=-1, command=None, delimiter=None):

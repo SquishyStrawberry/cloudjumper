@@ -21,7 +21,7 @@ class Stomach(object):
                            handler=self.spit,
                            command="spit")
 
-    def eat(self, sender, command, args):
+    def eat(self, sender, args):
         victim = " " .join(args)
         if victim.lower() not in self.stomach:
             msg = self.bot.get_message("eat")
@@ -30,7 +30,7 @@ class Stomach(object):
         self.bot.send_action(msg.format(victim=victim))
         self.stomach[victim.lower()] = victim
 
-    def spit(self, sender, command, args):
+    def spit(self, sender, args):
         victim = " " .join(args)
         if victim.lower() in self.stomach:
             msg = self.bot.get_message("spit")
@@ -40,7 +40,7 @@ class Stomach(object):
 
         self.bot.send_action(msg.format(victim=victim))
 
-    def vomit(self, sender, command, args):
+    def vomit(self, sender, args):
         if self.stomach:
             self.stomach = collections.OrderedDict()
             msg = self.bot.get_message("vomit")
@@ -48,7 +48,7 @@ class Stomach(object):
             msg = self.bot.get_message("vomit_superfluous")
         self.bot.send_action(msg)
 
-    def show_stomach(self, sender, command, args):
+    def show_stomach(self, sender, args):
         stomach = list(self.stomach.values())
         msg     = self.bot.get_message("stomach")
         if len(stomach) < 1:

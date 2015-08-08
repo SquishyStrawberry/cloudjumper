@@ -9,7 +9,7 @@ class Greeter(object):
         self.bot.subscribe(publisher=self.bot.JOIN, 
                            handler=self.greet)
 
-    def greet(self, sender, *args):
+    def greet(self, sender, args):
         msg = random.choice(self.bot.get_message("greetings"))
         self.bot.send_action(msg.format(nick=sender))
 
@@ -22,7 +22,7 @@ class Attacker(object):
                            args=1,
                            command="attack")
     
-    def attack(self, sender, command, args):
+    def attack(self, sender, args):
         msg = random.choice(self.bot.get_message("attacks"))
         self.bot.send_action(msg.format(target=args[0]))
         

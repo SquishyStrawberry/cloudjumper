@@ -3,10 +3,10 @@
         "user": "CloudJumpah",
         "nick": "Cloudjumper",
         "host": "irc.editingarchive.com",
-        "channel": "#bottest"
+        "channel": "#httyd"
     },
     "settings": {
-        "debug": false
+        "debug": true
     },
     "modules": {
         "calc": {

@@ -71,18 +71,6 @@ class Calculator(object):
             raise ValueError
         return stack[-1]
 
-    def handle_message(self, command):
-        if command["command"] != "calc":
-            return
-        exprs = command.get("args", ["0"])
-        try:
-            res = self.calculate(exprs)
-            if command.get("sender"):
-                self.results[command["sender"]] = res
-            return self.bot.get_message("calc_result").format(res)
-        except (TimeoutError, ValueError, IndexError) as e:
-            return self.bot.get_message("calc_error").format(e)
-
     def call(self, func, *args):
         try:
             res = func(*args) 
