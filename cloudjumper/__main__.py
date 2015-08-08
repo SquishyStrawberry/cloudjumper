@@ -20,7 +20,10 @@ def main(name):
         debug=config["settings"].get("debug", False),
         config=config,
     )
-    bot.run()
+    try:
+        bot.run()
+    except KeyboardInterrupt:
+        pass
 
 if __name__ == "__main__":
     main(CONFIG_NAME)
