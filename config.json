@@ -3,7 +3,7 @@
         "user": "CloudJumpah",
         "nick": "Cloudjumper",
         "host": "irc.editingarchive.com",
-        "channel": "#httyd"
+        "channel": "#bottest"
     },
     "settings": {
         "debug": false
@@ -13,9 +13,6 @@
             "timeout": 5 
         },
         "terminate": {
-            "allowed": [
-                "_MysteriousMagenta_"
-            ]
         }
     },
     "messages": {      
