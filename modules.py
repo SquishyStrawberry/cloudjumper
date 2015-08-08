@@ -4,10 +4,12 @@ from _modules.greeter_attacker import Attacker
 from _modules.stomach          import Stomach
 from _modules.calc             import Calculator
 from _modules.terminate        import Terminator
+from _modules.shower           import Shower
 
 modules = (
     Terminator,
     Greeter,
+    Shower,
     Attacker,
     Stomach,
     Calculator,
