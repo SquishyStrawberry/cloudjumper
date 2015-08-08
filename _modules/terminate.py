@@ -2,12 +2,17 @@
 
 
 class Terminator(object):  # This should've been in ArnoldC...
-    name    = "terminate"
-    command = "terminate"
-
+    name = "terminate"
+    
     def __init__(self, bot, config={}):
         self.bot = bot
+        self.bot.subscribe(publisher=self.bot.MESSAGE,
+                           handler=self.terminate,
+                           args=0,
+                           command="terminate")
+
     
-    def handle_message(self, command):
-        self.bot.started = False
+    def terminate(self, sender, args):
+        # TODO Add Flag-Checking
+        self.bot.started = not self.bot.started  # Restarting?
 

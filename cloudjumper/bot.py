@@ -20,6 +20,7 @@ class Cloudjumper(irc.IRCBot):
     JOIN    = "JOIN"
     PART    = "PART"
     MESSAGE = "PRIVMSG"
+    modules = modules
 
     def __init__(self, *args, **kwargs):
         if kwargs.get("debug", False):

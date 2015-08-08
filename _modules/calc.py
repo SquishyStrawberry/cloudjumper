@@ -40,6 +40,9 @@ class Calculator(object):
         self.bot     = bot
         self.timeout = config.get("timeout", 15)
         self.pipe    = multiprocessing.Pipe(False)
+        self.bot.subscribe(publisher=self.bot.MESSAGE,
+                           handler=self.calculate_comm,
+                           command="calc")
 
     def calculate(self, expressions):
         stack = []
@@ -70,6 +73,13 @@ class Calculator(object):
         if len(stack) > 1:
             raise ValueError
         return stack[-1]
+
+    def calculate_comm(self, sender, args):
+        try:
+            res = self.calculate(args)
+            self.bot.send_action(self.bot.get_message("calc_result".format(res)))
+        except Exception:  # Gotta catch 'em all!
+            self.bot.send_action(self.bot.get_message("calc_error"))
 
     def call(self, func, *args):
         try:
