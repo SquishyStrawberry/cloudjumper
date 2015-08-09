@@ -8,7 +8,6 @@ class Terminator(object):  # This should've been in ArnoldC...
         self.bot = bot
         self.bot.subscribe(publisher=self.bot.MESSAGE,
                            handler=self.terminate,
-                           args=0,
                            command="terminate")
 
     

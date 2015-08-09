@@ -12,7 +12,10 @@
         "calc": {
             "timeout": 5 
         },
-        "terminate": {
+        "greetings": {
+            "awesome_people": [
+                "_MysteriousMagenta_"
+            ]
         }
     },
     "messages": {      
@@ -43,6 +46,7 @@
             "charges {target}!",
             "unsheathes his teeth and bites {target}!"
         ],
+        "awesome_greeting": "bows down to {nick}",
         "remindme_success": "will remind {nick} '{message}' in {reply_in} seconds.",
         "reminder": "was told to tell you '{message}' by you {when} ago.",
         "post_not_found": "couldn't find post '{0}'. :(",
