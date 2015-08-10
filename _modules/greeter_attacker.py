@@ -8,7 +8,7 @@ class Greeter(object):
     def __init__(self, bot, config):
         self.bot     = bot
         self.awesome = config.get("awesome_people", [])
-        self.bot.subscribe(publisher=self.bot.JOIN, 
+        self.bot.subscribe(publisher=self.bot.PUBLISHERS["JOIN"], 
                            handler=self.greet)
 
     def greet(self, sender, args):
@@ -23,7 +23,7 @@ class Attacker(object):
     
     def __init__(self, bot, config):
         self.bot = bot
-        self.bot.subscribe(publisher=self.bot.MESSAGE, 
+        self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"], 
                            handler=self.attack,
                            command="attack")
     

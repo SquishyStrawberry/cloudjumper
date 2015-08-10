@@ -10,7 +10,6 @@ TimeoutError = globals().get("TimeoutError", _timeout)
 
 class Calculator(object): 
     name        = "calc"
-    command     = "calc"
     expressions = {
         "%":         (operator.mod, 2),
         "*":         (operator.mul, 2),
@@ -40,7 +39,7 @@ class Calculator(object):
         self.bot     = bot
         self.timeout = config.get("timeout", 15)
         self.pipe    = multiprocessing.Pipe(False)
-        self.bot.subscribe(publisher=self.bot.MESSAGE,
+        self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
                            handler=self.calculate_comm,
                            command="calc")
 

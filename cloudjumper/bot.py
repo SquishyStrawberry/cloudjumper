@@ -19,13 +19,17 @@ logging.getLogger(irc.__name__).setLevel(logging.INFO)
 
 class Cloudjumper(irc.IRCBot):
     # Subscribe publishers
-    JOIN    = "JOIN"
-    MESSAGE = "PRIVMSG"
-    PART    = "PART"
+    PUBLISHERS = {
+        "JOIN":    "JOIN",
+        "MESSAGE": "PRIVMSG",
+        "PART":    "PART",
+    }
     # Flag names
-    ADMIN     = "A"
-    IGNORE    = "I"
-    WHITELIST = "W"
+    FLAGS = {
+        "ADMIN": "A",
+        "IGNORE": "I",
+        "WHITELIST": "W",
+    }
     # For the shower module. (Unfair, I know.)
     modules = modules
 
@@ -59,14 +63,13 @@ class Cloudjumper(irc.IRCBot):
                 flags TEXT
             )
             """)  # Nice and pretty, right?
-        self.add_flags("_MysteriousMagenta_", self.ADMIN)
+        self.add_flags("_MysteriousMagenta_", self.FLAGS["ADMIN"])
 
     def extra_handling(self, block_data):
         if block_data.get("command") != "PRIVMSG":
             return block_data
         audience = self.subscribers[block_data["command"].lower()]
         msg      = block_data.get("message", "")
-        print(block_data)
         flgs     = self.list_flags(block_data.get("sender", ""))
         for spect in audience:
             args = self.split_command(msg, spect["delimiter"])
@@ -115,10 +118,14 @@ class Cloudjumper(irc.IRCBot):
 
     def _addflag(self, user, flag):
         flags = self.list_flags(user)    
-        if flag in flags:
+        if flag not in self.FLAGS.values() or flag in flags:
             return
         flags += flag
-        if len(flags) > 1:
+        self.cursor.execute("""
+        SELECT lower(name)
+        FROM Flags
+        """)
+        if user.lower() in (i[0] for i in self.cursor.fetchall()):
             self.cursor.execute("""
             UPDATE Flags
             SET flags=?

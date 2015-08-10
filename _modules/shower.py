@@ -5,7 +5,7 @@ class Shower(object):
     
     def __init__(self, bot, config):
         self.bot = bot
-        self.bot.subscribe(publisher=self.bot.MESSAGE,
+        self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
                            handler=self.print,
                            command="modules")
 

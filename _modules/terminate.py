@@ -6,9 +6,9 @@ class Terminator(object):  # This should've been in ArnoldC...
     
     def __init__(self, bot, config={}):
         self.bot = bot
-        self.bot.subscribe(publisher=self.bot.MESSAGE,
+        self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
                            handler=self.terminate,
-                           flags=self.bot.ADMIN,
+                           flags=self.bot.FLAGS["ADMIN"],
                            command="terminate")
 
     

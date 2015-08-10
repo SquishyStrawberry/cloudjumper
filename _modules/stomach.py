@@ -8,16 +8,16 @@ class Stomach(object):
     def __init__(self, bot, config):
         self.bot     = bot
         self.stomach = collections.OrderedDict()
-        self.bot.subscribe(publisher=self.bot.MESSAGE,
+        self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
                            handler=self.show_stomach,
                            command="stomach")
-        self.bot.subscribe(publisher=self.bot.MESSAGE,
+        self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
                            handler=self.vomit,
                            command="vomit")
-        self.bot.subscribe(publisher=self.bot.MESSAGE,
+        self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
                            handler=self.eat,
                            command="eat")
-        self.bot.subscribe(publisher=self.bot.MESSAGE,
+        self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
                            handler=self.spit,
                            command="spit")
 
