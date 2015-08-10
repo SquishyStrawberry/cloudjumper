@@ -5,6 +5,9 @@ __pycache__/
 # C extensions
 *.so
 
+# SQLite3 Databases
+*.db
+
 # Distribution / packaging
 .Python
 env/
@@ -47,7 +50,7 @@ coverage.xml
 *.mo
 *.pot
 
-# Django stuff:
+# Django stuff
 *.log
 
 # Sphinx documentation
