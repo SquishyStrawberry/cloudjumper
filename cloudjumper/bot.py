@@ -20,6 +20,7 @@ logging.getLogger(irc.__name__).setLevel(logging.INFO)
 class Cloudjumper(irc.IRCBot):
     # Subscribe publishers
     PUBLISHERS = {
+        "CONNECT": "CONNECT",
         "JOIN":    "JOIN",
         "MESSAGE": "PRIVMSG",
         "PART":    "PART",
@@ -39,7 +40,6 @@ class Cloudjumper(irc.IRCBot):
         else:
             lvl = logging.INFO
         logging.getLogger(irc.__name__).setLevel(lvl)
-        super().__init__(*args, **kwargs)
         self.config      = kwargs.get("config", {})
         self.settings    = self.config.get("settings", {})
         self.subscribers = collections.defaultdict(list)
@@ -64,9 +64,10 @@ class Cloudjumper(irc.IRCBot):
             )
             """)  # Nice and pretty, right?
         self.add_flags("_MysteriousMagenta_", self.FLAGS["ADMIN"])
+        super().__init__(*args, **kwargs)
 
     def extra_handling(self, block_data):
-        if block_data.get("command") != "PRIVMSG":
+        if "command" not in block_data:
             return block_data
         audience = self.subscribers[block_data["command"].lower()]
         msg      = block_data.get("message", "")
@@ -78,6 +79,11 @@ class Cloudjumper(irc.IRCBot):
                (spect["flags"] is None or all(i in flgs for i in spect["flags"])):
                 spect["handler"](block_data.get("sender"), args["args"])
         return block_data
+
+    def join_channel(self, channel):
+        super().join_channel(channel)
+        for spect in self.subscribers[self.PUBLISHERS["CONNECT"].lower()]:
+            spect["handler"](self.nick, [])
 
     def subscribe(self, publisher,  handler, args=-1, 
                   command=None, delimiter=None, flags=None):

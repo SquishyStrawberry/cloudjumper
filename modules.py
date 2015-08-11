@@ -6,8 +6,10 @@ from _modules.calc             import Calculator
 from _modules.terminate        import Terminator
 from _modules.shower           import Shower
 from _modules.flagging         import Flagging
+from _modules.entering         import Enterer
 
 modules = (
+    Enterer,
     Terminator,
     Flagging,
     Greeter,
