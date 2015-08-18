@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-from bot import Cloudjumper
-from api import Module
+try:
+    from cloudjumper.bot import Cloudjumper
+except ImportError:
+    from bot import Cloudjumper
 
 __version__ = "1.0.0"
 

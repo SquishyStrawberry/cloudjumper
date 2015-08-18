@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import collections
 import importlib
-import irc
 import json
 import logging
 import os
@@ -13,6 +12,10 @@ try:
     from modules import modules
 except ImportError as e:
     modules = ()
+try:
+    from cloudjumper import irc
+except ImportError:
+    import irc
 
 logging.getLogger(irc.__name__).setLevel(logging.INFO)
 
