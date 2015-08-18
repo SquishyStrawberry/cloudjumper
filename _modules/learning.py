@@ -20,7 +20,7 @@ class Learning(object):
         self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
                            handler=self.learn,
                            command="learn",
-                           flags=self.bot.FLAGS["WHITELIST"],
+                           flags=(self.bot.FLAGS["WHITELIST"], self.bot.FLAGS["ADMIN"]),
                            delimiter=" -> ")
         self.bot.subscribe(publisher=self.bot.PUBLISHERS["FULL_MESSAGE"],
                            handler=self.handle)

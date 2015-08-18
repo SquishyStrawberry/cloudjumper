@@ -84,7 +84,7 @@ class Cloudjumper(irc.IRCBot):
             args = self.split_command(msg, spect["delimiter"])
             if (spect["args"] == -1 or spect["args"] == len(args["args"])) and \
                (spect["command"] is None or args["command"] == spect["command"]) and \
-               (spect["flags"] is None or all(i in flgs for i in spect["flags"])):
+               (spect["flags"] is None or any(i in flgs for i in spect["flags"])):
                 spect["handler"](block_data.get("sender"), args["args"])
         if block_data["command"].lower() == self.PUBLISHERS["MESSAGE"].lower():
             for i in self.subscribers[self.PUBLISHERS["FULL_MESSAGE"].lower()]:
