@@ -23,6 +23,7 @@ class Cloudjumper(irc.IRCBot):
         "CONNECT": "CONNECT",
         "JOIN":    "JOIN",
         "MESSAGE": "PRIVMSG",
+        "FULL_MESSAGE": "MESSAGE",
         "PART":    "PART",
     }
     # Flag names
@@ -46,16 +47,8 @@ class Cloudjumper(irc.IRCBot):
         self.db_name     = self.settings.get("database", ":memory:")
         self.database    = sqlite3.connect(self.db_name)
         self.cursor      = self.database.cursor()
-        for cls in modules:
-            if hasattr(cls, "name"):
-                config = self.config["modules"].get(cls.name, {})
-            else:
-                config = {}
-            # TODO Log errors.
-            cls(self, config)
         # Setup Flag Table
-        self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
-        if "Flags" not in map(lambda x: x[0], self.cursor.fetchall()):
+        if "Flags" not in self.tables():
             self.cursor.execute("""
             CREATE TABLE Flags (
                 id    INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,6 +58,21 @@ class Cloudjumper(irc.IRCBot):
             """)  # Nice and pretty, right?
         self.add_flags("_MysteriousMagenta_", self.FLAGS["ADMIN"])
         super().__init__(*args, **kwargs)
+        for cls in modules:
+            if hasattr(cls, "name"):
+                config = self.config["modules"].get(cls.name, {})
+            else:
+                config = {}
+            # TODO Log errors.
+            cls(self, config)
+
+    def tables(self):
+        self.cursor.execute("""
+        SELECT name 
+        FROM sqlite_master 
+        WHERE type='table'
+        """)
+        return [i[0] for i in self.cursor.fetchall() or []]
 
     def extra_handling(self, block_data):
         if "command" not in block_data:
@@ -78,6 +86,9 @@ class Cloudjumper(irc.IRCBot):
                (spect["command"] is None or args["command"] == spect["command"]) and \
                (spect["flags"] is None or all(i in flgs for i in spect["flags"])):
                 spect["handler"](block_data.get("sender"), args["args"])
+        if block_data["command"].lower() == self.PUBLISHERS["MESSAGE"].lower():
+            for i in self.subscribers[self.PUBLISHERS["FULL_MESSAGE"].lower()]:
+                i["handler"](block_data["sender"], block_data.get("message", ""))
         return block_data
 
     def join_channel(self, channel):
@@ -85,7 +96,7 @@ class Cloudjumper(irc.IRCBot):
         for spect in self.subscribers[self.PUBLISHERS["CONNECT"].lower()]:
             spect["handler"](self.nick, [])
 
-    def subscribe(self, publisher,  handler, args=-1, 
+    def subscribe(self, publisher, handler, args=-1, 
                   command=None, delimiter=None, flags=None):
         self.subscribers[publisher.lower()].append({
             "args":      args,

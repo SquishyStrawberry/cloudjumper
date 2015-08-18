@@ -4,8 +4,9 @@ import re
 import socket
 import ssl
 import time
-
-logging.basicConfig(format="%(levelname)s@%(asctime)s:%(message)s", datefmt="%H:%M:%S")
+                            # Same as minecraft
+logging.basicConfig(format="[%(asctime)s %(levelname)s]: %(message)s", 
+                    datefmt="%H:%M:%S")
 
 
 class IRCBot(object):

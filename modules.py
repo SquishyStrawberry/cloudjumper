@@ -7,11 +7,14 @@ from _modules.terminate        import Terminator
 from _modules.shower           import Shower
 from _modules.flagging         import Flagging
 from _modules.entering         import Enterer
+from _modules.learning         import Learning
 
+# TODO Reaorganize these.
 modules = (
     Enterer,
     Terminator,
     Flagging,
+    Learning,
     Greeter,
     Shower,
     Attacker,

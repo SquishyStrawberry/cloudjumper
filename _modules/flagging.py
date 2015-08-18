@@ -18,6 +18,7 @@ class Flagging(object):
                            command="remove_flag")
         self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
                            handler=self.list_flags,
+                           command="list_flags",
                            args=1)
 
     def add_flag(self, sender, flags):
