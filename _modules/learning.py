@@ -22,6 +22,10 @@ class Learning(object):
                            command="learn",
                            flags=(self.bot.FLAGS["WHITELIST"], self.bot.FLAGS["ADMIN"]),
                            delimiter=" -> ")
+        self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
+                           handler=self.forget,
+                           command="forget",
+                           flags=(self.bot.FLAGS["WHITELIST"], self.bot.FLAGS["ADMIN"]))
         self.bot.subscribe(publisher=self.bot.PUBLISHERS["FULL_MESSAGE"],
                            handler=self.handle)
         self.bot.cursor.execute("""
@@ -33,21 +37,36 @@ class Learning(object):
 
     def learn(self, sender, args):
         trigger, response = " -> ".join(args[:-1]), args[-1]
+        if not trigger or not response:
+            msg = self.bot.get_message("command_error") 
+        else:
+            try:
+                if self.add_command(trigger, response):
+                    msg = self.bot.get_message("learn")
+                else:
+                    msg = self.bot.get_message("learn_superfluous")
+            except sre_constants.error:
+                msg = self.bot.get_message("command_error")
+        self.bot.send_action(msg.format(nick=sender))
+
+    def forget(self, sender, args):
         try:
-            if self.add_command(trigger, response):
-                msg = self.bot.get_message("learn").format(nick=sender)
+            if self.remove_command(" ".join(args)):
+                msg = self.bot.get_message("forget")
             else:
-                msg = self.bot.get_message("learn_superfluous")
+                msg = self.bot.get_message("forget_superfluous")
         except sre_constants.error:
-            msg = self.bot.get_message("command_error").format(nick=sender)
-        self.bot.send_action(msg)
+            msg = self.bot.get_message("command_error")
+        self.bot.send_action(msg.format(nick=sender))
 
     def add_command(self, trigger, response):
         if trigger.endswith("\\") and not trigger.endswith("\\\\"):
             trigger += "\\"
         compiled_trigger = re.compile(trigger.replace("${nick}", self.bot.nick))
+        return_value = False
         if compiled_trigger not in self.commands:
             self.commands[compiled_trigger] = response
+            return_value = True
         self.bot.cursor.execute("""
         SELECT trigger
         FROM Commands
@@ -58,15 +77,38 @@ class Learning(object):
             INSERT INTO Commands(trigger, response)
             VALUES (?, ?)
             """, (trigger, response))
-        return True
+            return_value = True
+        return return_value
+
+    def remove_command(self, trigger):
+        if trigger.endswith("\\") and not trigger.endswith("\\\\"):
+            trigger += "\\"
+        compiled_trigger = re.compile(trigger.replace("${nick}", self.bot.nick))
+        return_value = False
+        if compiled_trigger in self.commands:
+            del self.commands[compiled_trigger]
+            return_value = True
+        self.bot.cursor.execute("""
+        SELECT trigger
+        FROM Commands
+        WHERE trigger=?
+        """, (trigger,))
+        if self.bot.cursor.fetchall():
+            self.bot.cursor.execute("""
+            DELETE FROM Commands
+            WHERE trigger=?
+            """, (trigger,))
+            return_value = True
+        return return_value
 
     def handle(self, sender, message):
-        splat = self.bot.split_command(message, " ->")
+        # No delimiter needed since we're only getting the command
+        splat = self.bot.split_command(message)
         # TODO Add this to Cloudjumper.subscribe
         if splat.get("command", "").lower() in ("learn", "forget"):
             return
         for k, v in self.commands.items():
-            match  = k.search(message)
+            match = k.search(message)
             # TODO Add ${group} syntax
             groups = self.find_groups.findall(v)
             if match is None:
