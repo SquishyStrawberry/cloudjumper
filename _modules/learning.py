@@ -117,5 +117,5 @@ class Learning(object):
                     v = v.replace("${{{}}}".format(i), match.group(i))
                 except IndexError:
                     pass
-            self.bot.send_action(v)
+            self.bot.send_action(v.replace("${nick}", sender))
 
