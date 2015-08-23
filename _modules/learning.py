@@ -3,7 +3,7 @@ import re
 import sre_constants
 
 class Learning(object):
-    find_groups = re.compile("$\{(.*?)\}")
+    find_groups = re.compile("\$\{(.*?)\}")
     
     def __init__(self, bot, config):
         self.bot = bot
@@ -109,9 +109,13 @@ class Learning(object):
             return
         for k, v in self.commands.items():
             match = k.search(message)
-            # TODO Add ${group} syntax
-            groups = self.find_groups.findall(v)
             if match is None:
                 continue
+            groups = self.find_groups.findall(v)
+            for i in groups:
+                try:
+                    v = v.replace("${{{}}}".format(i), match.group(i))
+                except IndexError:
+                    pass
             self.bot.send_action(v)
 
