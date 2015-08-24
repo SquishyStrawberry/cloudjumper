@@ -13,6 +13,5 @@ class Terminator(object):  # This should've been in ArnoldC...
 
     
     def terminate(self, sender, args):
-        # TODO Add Flag-Checking
         self.bot.quit()
 

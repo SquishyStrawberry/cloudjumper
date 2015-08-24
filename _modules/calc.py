@@ -76,7 +76,7 @@ class Calculator(object):
     def calculate_comm(self, sender, args):
         try:
             res = self.calculate(args)
-            self.bot.send_action(self.bot.get_message("calc_result".format(res)))
+            self.bot.send_action(self.bot.get_message("calc_result").format(res))
         except Exception:  # Gotta catch 'em all!
             self.bot.send_action(self.bot.get_message("calc_error"))
 

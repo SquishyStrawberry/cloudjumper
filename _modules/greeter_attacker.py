@@ -12,7 +12,7 @@ class Greeter(object):
                            handler=self.greet)
 
     def greet(self, sender, args):
-        if sender.lower() != "_mysteriousmagenta_":  # ;)
+        if sender.lower() in ("_mysteriousmagenta_", "joel"):  # ;)
             msg = random.choice(self.bot.get_message("greetings"))
         else:
             msg = self.bot.get_message("awesome_greeting")

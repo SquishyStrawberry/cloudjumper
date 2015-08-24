@@ -23,11 +23,11 @@ logging.getLogger(irc.__name__).setLevel(logging.INFO)
 class Cloudjumper(irc.IRCBot):
     # Subscribe publishers
     PUBLISHERS = {
-        "CONNECT": "CONNECT",
-        "JOIN":    "JOIN",
-        "MESSAGE": "PRIVMSG",
+        "CONNECT":      "CONNECT",
+        "JOIN":         "JOIN",
+        "MESSAGE":      "PRIVMSG",
         "FULL_MESSAGE": "MESSAGE",
-        "PART":    "PART",
+        "PART":         "PART",
     }
     # Flag names
     FLAGS = {
@@ -63,7 +63,7 @@ class Cloudjumper(irc.IRCBot):
         super().__init__(*args, **kwargs)
         for cls in modules:
             if hasattr(cls, "name"):
-                config = self.config["modules"].get(cls.name, {})
+                config = self.get_config(cls.name)
             else:
                 config = {}
             # TODO Log errors.
@@ -123,6 +123,9 @@ class Cloudjumper(irc.IRCBot):
             "command": args[0], 
             "args": msg
         }
+
+    def get_config(self, name):
+        return self.config.get("modules", {}).get(name, {})
 
     def get_message(self, name):
         return self.config.get("messages", {}).get(name, "No message found!")
