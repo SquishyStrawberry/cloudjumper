@@ -30,5 +30,7 @@ class UrlTitle(object):
         req = cls.session.get(url, timeout=5)
         if req.ok:
             soup = bs4.BeautifulSoup(req.text)
-            return soup.title.text
+            if hasattr(soup.title, "text"):
+                return soup.title.text
+
 
