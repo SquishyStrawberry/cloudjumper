@@ -1,13 +1,19 @@
 {
     "login": {
-        "user": "CloudJumpah",
-        "nick": "Cloudjumper",
+        "user": "Cloudjumpah",
+        "nick": "Cloudjumper0",
+        "password": "",
+        "email": "",
         "host": "irc.editingarchive.com",
+        "port": 6697,
         "channel": "#bottest"
     },
     "settings": {
         "database": "cloudjumper.db",
-        "debug": true
+        "use_ssl": true,
+        "debug": false,
+        "super_debug": false,
+        "register": false
     },
     "modules": {
         "calc": {

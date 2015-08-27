@@ -38,20 +38,30 @@ class Cloudjumper(irc.IRCBot):
     # For the shower module. (Unfair, I know.)
     modules = modules
 
-    def __init__(self, *args, **kwargs):
-        if kwargs.get("debug", False):
-            lvl = logging.DEBUG
-        else:
-            lvl = logging.INFO
-        logging.getLogger(irc.__name__).setLevel(lvl)
-        self.config      = kwargs.get("config", {})
+    def __init__(self, config, **kwargs):
+        """
+        Initializes a Cloudjumper instance.
+        Arguments:
+            config: A configuration dict for the bot
+        Keyword Arguments:
+            check_login: Enables crashing on no login on a registered username.
+            fail_after: How many seconds to crash after if you're not registered.
+            use_ssl: Enables SSL, allowing for more security
+        """
+        self.config      = config 
+        self.login_info  = self.config.get("login", {})
         self.settings    = self.config.get("settings", {})
         self.subscribers = collections.defaultdict(list)
         self.db_name     = self.settings.get("database", ":memory:")
         self.database    = sqlite3.connect(self.db_name)
         self.cursor      = self.database.cursor()
+        if self.settings.get("debug", False):
+            lvl = logging.DEBUG
+        else:
+            lvl = logging.INFO
+        logging.getLogger(irc.__name__).setLevel(lvl)
         # Setup Flag Table
-        if "Flags" not in self.tables():
+        if not self.table_exists("Flags"):
             self.cursor.execute("""
             CREATE TABLE Flags (
                 id    INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,7 +70,20 @@ class Cloudjumper(irc.IRCBot):
             )
             """)  # Nice and pretty, right?
         self.add_flags("_MysteriousMagenta_", self.FLAGS["ADMIN"])
-        super().__init__(*args, **kwargs)
+        # Look, you can hear this 'line' say "Please kill me"!
+        super().__init__(*[self.login_info[i] for i in ("user", "nick",
+                                                        "channel", "host", 
+                                                        "port")], **{
+                "use_ssl": self.settings.get("use_ssl", False)
+            })
+        if self.login_info.get("password"):
+            if self.settings.get("register", False):
+                self.register(self.login_info["password"], 
+                              self.login_info.get("email") or None, 
+                              True)
+            else:
+                self.login(self.login_info["password"])
+
         for cls in modules:
             if hasattr(cls, "name"):
                 config = self.get_config(cls.name)
@@ -68,6 +91,7 @@ class Cloudjumper(irc.IRCBot):
                 config = {}
             # TODO Log errors.
             cls(self, config)
+        print(self.subscribers)
 
     def tables(self):
         self.cursor.execute("""
@@ -77,10 +101,13 @@ class Cloudjumper(irc.IRCBot):
         """)
         return [i[0] for i in self.cursor.fetchall() or []]
 
+    def table_exists(self, name):
+        return name.lower() in map(str.lower, self.tables())
+
     def extra_handling(self, block_data):
         if "command" not in block_data:
             return block_data
-        audience = self.subscribers[block_data["command"].lower()]
+        audience = self.subscribers[block_data["command"].upper()]
         msg      = block_data.get("message", "")
         flgs     = self.list_flags(block_data.get("sender", ""))
         for spect in audience:
@@ -89,19 +116,21 @@ class Cloudjumper(irc.IRCBot):
                (spect["command"] is None or args["command"] == spect["command"]) and \
                (spect["flags"] is None or any(i in flgs for i in spect["flags"])):
                 spect["handler"](block_data.get("sender"), args["args"])
-        if block_data["command"].lower() == self.PUBLISHERS["MESSAGE"].lower():
-            for i in self.subscribers[self.PUBLISHERS["FULL_MESSAGE"].lower()]:
+        if block_data["command"].upper() == self.PUBLISHERS["MESSAGE"]:
+            for i in self.subscribers[self.PUBLISHERS["FULL_MESSAGE"]]:
                 i["handler"](block_data["sender"], block_data.get("message", ""))
         return block_data
 
     def join_channel(self, channel):
         super().join_channel(channel)
-        for spect in self.subscribers[self.PUBLISHERS["CONNECT"].lower()]:
+        for spect in self.subscribers[self.PUBLISHERS["CONNECT"]]:
             spect["handler"](self.nick, [])
 
     def subscribe(self, publisher, handler, args=-1, 
                   command=None, delimiter=None, flags=None):
-        self.subscribers[publisher.lower()].append({
+        if publisher not in self.PUBLISHERS.values():
+            raise ValueError("Unknown publisher {!r}".format(publisher))
+        self.subscribers[publisher].append({
             "args":      args,
             "command":   command,
             "delimiter": delimiter,
@@ -126,6 +155,12 @@ class Cloudjumper(irc.IRCBot):
 
     def get_config(self, name):
         return self.config.get("modules", {}).get(name, {})
+
+    def get_block(self, *args, **kwargs):
+        block = super().get_block(*args, **kwargs)
+        if self.settings.get("super_debug", False):
+            self.logger.debug("[Got Block '{}']".format(block.strip()))
+        return block
 
     def get_message(self, name):
         return self.config.get("messages", {}).get(name, "No message found!")
@@ -192,16 +227,7 @@ class Cloudjumper(irc.IRCBot):
     def start_new(cls, config_name):
         with open(config_name) as config_file:
             config = json.load(config_file)
-        login = config["login"]
-        bot = cls(
-            login["user"],
-            login["nick"],
-            login["channel"],
-            login["host"],
-            login.get("port", None),
-            debug=config["settings"].get("debug", False),
-            config=config,
-        )
+        bot = cls(config)
         try:
             bot.run()
         except KeyboardInterrupt:
