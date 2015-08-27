@@ -1,7 +1,7 @@
 {
     "login": {
         "user": "Cloudjumpah",
-        "nick": "Cloudjumper0",
+        "nick": "Cloudjumper",
         "password": "",
         "email": "",
         "host": "irc.editingarchive.com",
@@ -11,7 +11,7 @@
     "settings": {
         "database": "cloudjumper.db",
         "use_ssl": true,
-        "debug": false,
+        "debug": true,
         "super_debug": false,
         "register": false
     },
@@ -100,6 +100,7 @@
         "mail_okay": "will deliver that message!",
         "mail_self": "thinks you can talk to yourself.",
         "no_commands": "has no commands.",
+        "list_commands_announce": "will send the commands to {nick}",
         "nodice": "can't find a die of that size for {nick}...",
         "post_found": "found a post with id '{0.id}'!",
         "post_not_found": "couldn't find post '{0}'. :(",

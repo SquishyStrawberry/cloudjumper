@@ -91,7 +91,6 @@ class Cloudjumper(irc.IRCBot):
                 config = {}
             # TODO Log errors.
             cls(self, config)
-        print(self.subscribers)
 
     def tables(self):
         self.cursor.execute("""

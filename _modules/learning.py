@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import re
 import sre_constants
+import multiprocessing
 
 class Learning(object):
     find_groups = re.compile("\$\{(.*?)\}")
@@ -26,6 +27,9 @@ class Learning(object):
                            handler=self.forget,
                            command="forget",
                            flags=(self.bot.FLAGS["WHITELIST"], self.bot.FLAGS["ADMIN"]))
+        self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
+                           handler=self.list_commands,
+                           command="list_commands")
         self.bot.subscribe(publisher=self.bot.PUBLISHERS["FULL_MESSAGE"],
                            handler=self.handle)
         self.bot.cursor.execute("""
@@ -100,6 +104,29 @@ class Learning(object):
             """, (trigger,))
             return_value = True
         return return_value
+
+    def _listcommands(self, commands, recipient):
+        if not commands:
+            self.bot.send_action(self.bot.get_message("no_commands"), recipient) 
+        else:
+            msg = self.bot.get_message("print_command")
+            for trigger, response in commands:
+                self.bot.send_action(msg.format(trigger=trigger,
+                                                response=response),
+                                     recipient)
+
+    def list_commands(self, sender, message):
+        self.bot.cursor.execute("""
+        SELECT trigger, response
+        FROM Commands
+        """)
+        commands = self.bot.cursor.fetchall() 
+        msg = self.bot.get_message("list_commands_announce")
+        self.bot.send_action(msg.format(nick=sender))
+        process = multiprocessing.Process(target=self._listcommands,
+                                          args=(commands, sender))
+        process.start()
+            
 
     def handle(self, sender, message):
         # No delimiter needed since we're only getting the command

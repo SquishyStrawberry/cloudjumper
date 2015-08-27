@@ -34,7 +34,6 @@ class IRCBot(object):
             port = 6667
             if kwargs.get("use_ssl", False):
                 port += 30  # Default SSL port is 6697
-        print(port, kwargs.get("use_ssl", False)) 
         self.connection   = (host, port)
         self.user         = user
         self.nick         = nick
