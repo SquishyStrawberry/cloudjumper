@@ -142,7 +142,7 @@ class Cloudjumper(irc.IRCBot):
         if name.endswith("!"):
             name = name[:-1]
         args = raw_message.split(" ")[1 if name == self.nick.lower() else 0:]
-        if args[0] == "!":
+        if args and args[0] == "!":
             del args[0]
         msg = " " .join(args[1:])
         if delim is not False: # TODO Add a better way to ask for no split.
