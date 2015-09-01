@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
+import multiprocessing
 import re
 import sre_constants
-import multiprocessing
+import time
 
 class Learning(object):
+    name = "learning"
+    group_string = "${{{}}}"
     find_groups = re.compile("\$\{(.*?)\}")
     
     def __init__(self, bot, config):
         self.bot = bot
+        self.config = config
         self.commands = {}  # Used for automatically caching.
         self.handle_it = True
         if "Commands" not in self.bot.tables():
@@ -114,6 +118,7 @@ class Learning(object):
                 self.bot.send_action(msg.format(trigger=trigger,
                                                 response=response),
                                      recipient)
+                time.sleep(self.config.get("command_delay", "1"))
 
     def list_commands(self, sender, message):
         self.bot.cursor.execute("""
@@ -141,7 +146,7 @@ class Learning(object):
             groups = self.find_groups.findall(v)
             for i in groups:
                 try:
-                    v = v.replace("${{{}}}".format(i), match.group(i))
+                    v = v.replace(self.group_string.format(i), match.group(i))
                 except IndexError:
                     pass
             self.bot.send_action(v.replace("${nick}", sender))

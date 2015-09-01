@@ -16,6 +16,9 @@
         "register": false
     },
     "modules": {
+        "learning": {
+            "command_delay": 1
+        },
         "calc": {
             "timeout": 5 
         },
