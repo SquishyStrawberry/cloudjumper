@@ -24,16 +24,16 @@ class Cloudjumper(irc.IRCBot):
     # Subscribe publishers
     PUBLISHERS = {
         "CONNECT":      "CONNECT",
+        "FULL_MESSAGE": "MESSAGE",
         "JOIN":         "JOIN",
         "MESSAGE":      "PRIVMSG",
-        "FULL_MESSAGE": "MESSAGE",
         "PART":         "PART",
-        "TOTALLY_IGNORED": "T",
     }
     # Flag names
     FLAGS = {
         "ADMIN": "A",
         "IGNORE": "I",
+        "TOTALLY_IGNORED": "T",
         "WHITELIST": "W",
     }
     # For the shower module. (Unfair, I know.)
