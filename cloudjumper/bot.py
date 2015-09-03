@@ -233,8 +233,11 @@ class Cloudjumper(irc.IRCBot):
         bot = cls(config)
         try:
             bot.run()
-        except KeyboardInterrupt:
-            pass
+        except BaseException as e:
+            # Now he has no more dementia :D
+            bot.quit()
+            if not isinstance(e, KeyboardInterrupt):
+                raise
         finally:
             bot.quit()
 
