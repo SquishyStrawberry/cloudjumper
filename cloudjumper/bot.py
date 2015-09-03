@@ -28,6 +28,7 @@ class Cloudjumper(irc.IRCBot):
         "MESSAGE":      "PRIVMSG",
         "FULL_MESSAGE": "MESSAGE",
         "PART":         "PART",
+        "TOTALLY_IGNORED": "T",
     }
     # Flag names
     FLAGS = {
@@ -109,6 +110,8 @@ class Cloudjumper(irc.IRCBot):
         audience = self.subscribers[block_data["command"].upper()]
         msg      = block_data.get("message", "")
         flgs     = self.list_flags(block_data.get("sender", ""))
+        if self.FLAGS["TOTALLY_IGNORED"] in flgs:
+            return block_data
         for spect in audience:
             args = self.split_command(msg, spect["delimiter"])
             if (spect["args"] == -1 or spect["args"] == len(args["args"])) and \
