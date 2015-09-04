@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import setuptools
+from cloudjumper import __version__
 
 setuptools.setup(
     name="cloudjumper",
-    version="1.0.0", # TODO Add __version__
+    version=__version__,
     description="A modular IRC Bot",
     author="SquishyStrawberry",
     install_requires=[

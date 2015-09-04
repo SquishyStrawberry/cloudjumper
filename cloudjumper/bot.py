@@ -6,6 +6,7 @@ import logging
 import os
 import sqlite3
 import sys
+import traceback
 try:
     if os.getcwd() not in sys.path:
         sys.path.insert(0, os.getcwd())
@@ -90,8 +91,13 @@ class Cloudjumper(irc.IRCBot):
                 config = self.get_config(cls.name)
             else:
                 config = {}
-            # TODO Log errors.
-            cls(self, config)
+            try:
+                cls(self, config)
+            except:  # I hate broad exception clauses.
+                self.logger.debug("[Class '{}' failed in __init__]".format(cls))
+                traceback.print_exc()
+
+
 
     def tables(self):
         self.cursor.execute("""

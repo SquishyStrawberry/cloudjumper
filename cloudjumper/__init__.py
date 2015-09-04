@@ -4,5 +4,5 @@ try:
 except ImportError:
     from bot import Cloudjumper
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
