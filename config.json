@@ -20,7 +20,19 @@
             "command_delay": 1
         },
         "calc": {
-            "timeout": 5 
+            "timeout": 5,
+            "zeroes": [
+                "http://i.imgur.com/NCfku.jpg",
+                "http://i.imgur.com/PSCckp9.jpg",
+                "http://i.imgur.com/GKG3mqX.jpg",
+                "http://i.imgur.com/ppkHGcK.png",
+                "http://i.imgur.com/m3olBGK.jpg",
+                "http://i.imgur.com/b3mNZF6.jpg",
+                "http://i.imgur.com/PbLsNHz.jpg",
+                "http://i.imgur.com/f3PHdMv.jpg",
+                "http://i.imgur.com/4cj4uem.jpg",
+                "http://i.imgur.com/UL2akX1.gif"
+            ]
         },
         "greetings": {
             "awesome_people": [
