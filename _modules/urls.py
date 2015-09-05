@@ -35,9 +35,13 @@ class UrlTitle(object):
         except requests.exceptions.RequestException:  # TODO Be more specific
             return
         if req.ok:
-            chunk = next(req.iter_content(2048))
-            soup = bs4.BeautifulSoup(chunk)
-            if hasattr(soup.title, "text"):
-                return soup.title.text
+            try:
+                chunk = next(req.iter_content(2048))
+            except requests.exceptions.RequestException:
+                pass
+            else:
+                soup = bs4.BeautifulSoup(chunk)
+                if hasattr(soup.title, "text"):
+                    return soup.title.text
         req.close()
         
