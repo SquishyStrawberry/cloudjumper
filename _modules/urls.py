@@ -30,7 +30,10 @@ class UrlTitle(object):
     def get_title(cls, url):
         # FIXME Handle other titling types
         # FIXME Provide variable iter_content size
-        req = cls.session.get(url, stream=True)
+        try:
+            req = cls.session.get(url, stream=True, timeout=5)
+        except TimeoutError:
+            return
         if req.ok:
             chunk = next(req.iter_content(2048))
             soup = bs4.BeautifulSoup(chunk)
