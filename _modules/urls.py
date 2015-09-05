@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-import requests
 import bs4 
 import re
+import requests
+import time
 
 
 class UrlTitle(object):
@@ -27,10 +28,13 @@ class UrlTitle(object):
             
     @classmethod
     def get_title(cls, url):
-        req = cls.session.get(url, timeout=5)
+        # FIXME Handle other titling types
+        # FIXME Provide variable iter_content size
+        req = cls.session.get(url, stream=True)
         if req.ok:
-            soup = bs4.BeautifulSoup(req.text)
+            chunk = next(req.iter_content(2048))
+            soup = bs4.BeautifulSoup(chunk)
             if hasattr(soup.title, "text"):
                 return soup.title.text
-
-
+        req.close()
+        
