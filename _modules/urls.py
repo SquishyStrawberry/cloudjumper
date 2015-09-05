@@ -32,7 +32,7 @@ class UrlTitle(object):
         # FIXME Provide variable iter_content size
         try:
             req = cls.session.get(url, stream=True, timeout=5)
-        except TimeoutError:
+        except requests.exceptions.RequestException:  # TODO Be more specific
             return
         if req.ok:
             chunk = next(req.iter_content(2048))
