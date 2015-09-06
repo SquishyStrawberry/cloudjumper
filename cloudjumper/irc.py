@@ -4,6 +4,9 @@ import re
 import socket
 import ssl
 import time
+
+from cloudjumper import helpers
+
                             # Same as minecraft
 logging.basicConfig(format="[%(asctime)s %(levelname)s]: %(message)s", 
                     datefmt="%H:%M:%S")
@@ -134,8 +137,18 @@ class IRCBot(object):
             elif "this nickname is registered" in clear_message and self.check_login and not self.logged_in:
                 self.logger.debug("[Registered Nickname]")
                 self.fail_time = time.time()
+        
+        if recipient.lower() == self.channel.lower():
+            source = self.channel
+        else:
+            source = sender
 
-        return {"command": command, "sender": sender, "recipient": recipient, "message": message}
+        return helpers.Message(command,
+                               sender,
+                               recipient,
+                               message,
+                               source)
+        #return {"command": command, "sender": sender, "recipient": recipient, "message": message}
 
     def handle_ping(self, message):
         is_ping = message.upper().startswith("PING")
