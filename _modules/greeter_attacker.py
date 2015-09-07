@@ -12,6 +12,8 @@ class Greeter(object):
                            handler=self.greet)
 
     def greet(self, sender, args):
+        if self.bot.FLAGS["IGNORE"] in self.bot.list_flags(sender):
+            return
         if sender.lower() not in ("_mysteriousmagenta_", "joel"):  # ;)
             msg = random.choice(self.bot.get_message("greetings"))
         else:
