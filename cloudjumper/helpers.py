@@ -1,6 +1,28 @@
 #!/usr/bin/env python3
 
 
+class BaseSack(object):
+
+    def __init__(self):   
+        self.contents = {}
+
+    def add(self, thing):
+        nthing = self.normalize(thing)
+        if nthing not in self.contents:
+            self.contents[nthing] = thing
+        return nthing not in self.contents
+
+    def remove(self, thing):
+        nthing = self.normalize(thing)
+        if nthing in self.contents:
+            del self.contents[nthing]
+        return nthing not in self.contents
+
+    @classmethod
+    def normalize(cls, thing):
+        return thing
+
+
 class Message(object):
     # FIXME Migrate all code over to new Message class
     # In the meantime, we have this.
