@@ -123,7 +123,11 @@ class Cloudjumper(irc.IRCBot):
             if (spect["args"] == -1 or spect["args"] == len(args["args"])) and \
                (spect["command"] is None or args["command"] == spect["command"]) and \
                (spect["flags"] is None or any(i in flgs for i in spect["flags"])):
-                spect["handler"](block_data.get("sender"), args["args"])
+                try:
+                    spect["handler"](block_data.get("sender"), args["args"])
+                except: # Nom.
+                    self.logger.debug("[Command {!r} failed]".format(spect["command"] or ""))
+                    traceback.print_exc()
         if block_data["command"].upper() == self.PUBLISHERS["MESSAGE"]:
             for i in self.subscribers[self.PUBLISHERS["FULL_MESSAGE"]]:
                 i["handler"](block_data["sender"], block_data.get("message", ""))
