@@ -42,6 +42,6 @@ class UrlTitle(object):
             else:
                 soup = bs4.BeautifulSoup(chunk)
                 if hasattr(soup.title, "text"):
-                    return soup.title.text
+                    return soup.title.text.strip()
         req.close()
         
