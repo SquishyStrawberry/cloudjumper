@@ -5,18 +5,39 @@ class BaseSack(object):
 
     def __init__(self):   
         self.contents = {}
+        self.iterator = None
 
     def add(self, thing):
         nthing = self.normalize(thing)
-        if nthing not in self.contents:
+        cond = nthing not in self.contents
+        if cond:
             self.contents[nthing] = thing
-        return nthing not in self.contents
+        return cond
 
     def remove(self, thing):
         nthing = self.normalize(thing)
-        if nthing in self.contents:
+        cond = nthing in self.contents
+        if cond:
             del self.contents[nthing]
-        return nthing not in self.contents
+        return cond
+
+    def get(self):
+        if self.iterator is None:
+            self.iterator = iter(self.contents.values())
+        try:
+            return next(self.iterator)
+        except StopIteration:
+            self.iterator = None
+            raise
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return self.get()
+
+    def __contains__(self, thing):
+        return self.normalize(thing) in self.contents
 
     @classmethod
     def normalize(cls, thing):

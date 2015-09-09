@@ -5,12 +5,12 @@
         "password": "",
         "email": "",
         "host": "irc.editingarchive.com",
-        "port": 6697,
+        "port": 6667,
         "channel": "#bottest"
     },
     "settings": {
         "database": "cloudjumper.db",
-        "use_ssl": true,
+        "use_ssl": false,
         "debug": true,
         "super_debug": false,
         "register": false
@@ -108,6 +108,7 @@
         "link_subreddit": "says that the full link to the subreddit is '{link}'",
         "list_flags": "{user} has flags {flags}.",
         "list_flags_error": "{user} has no flags!",
+        "list_stolen": "has stolen {stolen}",
         "list_modules": "is running {modules}.",
         "location": "can be found at {}",
         "location_fail": "can't be found! :(",
@@ -131,6 +132,7 @@
         "send_mail": "was told to tell you \"{message}\" by {sender}",
         "spit": "spits out {victim}!",
         "spit_superfluous": "hasn't eaten {victim} yet!",
+        "steal_thing": "steals {nick}'s {thing}",
         "stomach": "is digesting {victims}...",
         "stomach_empty": "isn't digesting anyone...",
         "switch_channel": "Gotta go to fly with Hiccup...",
