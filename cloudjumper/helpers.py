@@ -21,11 +21,17 @@ class BaseSack(object):
             del self.contents[nthing]
         return cond
 
+    def empty(self):
+        self.contents = {}
+
     def get(self):
         if self.iterator is None:
             self.iterator = iter(self.contents.values())
         try:
-            return next(self.iterator)
+            try:
+                return next(self.iterator)
+            except RuntimeError as e:
+                raise StopIteration from e
         except StopIteration:
             self.iterator = None
             raise
@@ -38,6 +44,9 @@ class BaseSack(object):
 
     def __contains__(self, thing):
         return self.normalize(thing) in self.contents
+
+    def __len__(self):
+        return len(self.contents)
 
     @classmethod
     def normalize(cls, thing):

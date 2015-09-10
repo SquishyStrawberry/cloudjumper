@@ -8,7 +8,7 @@ class StealSack(BaseSack):
     
     @classmethod
     def normalize(cls, thing):
-        return thing.lower()  
+        return tuple(map(str.lower, thing))
 
 class Thief(object):
     name = "stealing"
@@ -34,14 +34,37 @@ class Thief(object):
         msg = self.bot.get_message("steal_thing")
         for i in self.regex.finditer(message):
             thing = i.group("thing")
-            self.sack.add(thing)
-            self.bot.send_action(msg.format(nick=sender, thing=thing))
+            if self.sack.add((sender, thing)):
+                self.bot.send_action(msg.format(nick=sender, thing=thing))
+
+    def _printout(self, sender, args):
+        msg = self.bot.get_message("list_stolen")
+        if not self.sack:
+            stuff = "nothing"    
+        elif len(self.sack) == 1:
+            stuff = "just {}'s {}".format(*self.sack.get())
+        else:
+            first = []
+            last  = None
+            sack_len = len(self.sack)
+            for n, i in enumerate(self.sack):
+                if n == sack_len - 1:
+                    last = i
+                else:
+                    first.append(i)
+            stuff = ", ".join("{}'s {}".format(*i) for i in first)
+            stuff += " and {}'s {}".format(*last)
+        self.bot.send_action(msg.format(stolen=stuff))
 
     def print_out(self, sender, args):
-        msg = self.bot.get_message("list_stolen")
-        stuff = sorted(list(self.sack))
-        self.bot.send_action(msg.format(stolen=", ".join(stuff)))
+        while True:
+            try:
+                self._printout(sender, args)
+            except StopIteration:
+                pass
+            else:
+                return
 
     def flip(self, sender, args):
         self.steal = not self.steal
-        
+    
