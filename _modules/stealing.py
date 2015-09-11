@@ -26,6 +26,7 @@ class Thief(object):
                            command="stolen")
         self.bot.subscribe(publisher=self.bot.PUBLISHERS["MESSAGE"],
                            handler=self.flip,
+                           flags=self.bot.FLAGS["ADMIN"],
                            command="flip_thief")  # FIXME Add replies
 
     def take(self, sender, message):
@@ -67,4 +68,6 @@ class Thief(object):
 
     def flip(self, sender, args):
         self.steal = not self.steal
-    
+        msg = self.bot.get_message("flip_thief_" + str(self.steal).lower())
+        self.bot.send_action(msg)
+ 

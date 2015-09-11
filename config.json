@@ -81,6 +81,8 @@
         "flag_list_none": "knows that {user} has no flags",
         "forget": "forgot one of his tricks!",
         "forget_superfluous": "doesn't know that trick!",
+        "flip_thief_true": "will now steal!",
+        "flip_thief_false": "won't steal anymorewon't steal anymore!",
         "greetings": [
             "cheerfully waggles his tail at {nick}'s arrival",
             "climbs {nick}!",
