@@ -10,8 +10,9 @@
     },
     "settings": {
         "database": "cloudjumper.db",
+        "module_folder": "main_modules",
         "use_ssl": false,
-        "debug": false,
+        "debug": true,
         "super_debug": false,
         "register": false
     },

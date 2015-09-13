@@ -35,6 +35,6 @@ cd $1
 
 # Actually create the files
 # TODO Provide option to just copy instead of link
-ln -s ${origin}/_modules ${origin}/modules.py .
+ln -s ${origin}/{main_modules,reddit_modules,modules.py} .
 cp ${origin}/config.json .
 

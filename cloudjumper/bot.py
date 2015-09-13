@@ -7,18 +7,23 @@ import os
 import sqlite3
 import sys
 import traceback
-try:
-    if os.getcwd() not in sys.path:
-        sys.path.insert(0, os.getcwd())
-    from modules import modules
-except ImportError as e:
-    modules = ()
+
 try:
     from cloudjumper import irc
 except ImportError:
     import irc
 
 logging.getLogger(irc.__name__).setLevel(logging.INFO)
+
+try:
+    if os.getcwd() not in sys.path:
+        sys.path.insert(sys.path[0] == "", os.getcwd())
+    import modules
+except ImportError as e:
+    logging.getLogger(irc.__name__).warning("[Could not load modules "
+                                            "failed with error '{}']".format(e))
+    modules = ()
+
 
 
 class Cloudjumper(irc.IRCBot):
@@ -37,8 +42,6 @@ class Cloudjumper(irc.IRCBot):
         "TOTALLY_IGNORED": "T",
         "WHITELIST": "W",
     }
-    # For the shower module. (Unfair, I know.)
-    modules = modules
 
     def __init__(self, config, **kwargs):
         """
@@ -53,6 +56,7 @@ class Cloudjumper(irc.IRCBot):
         self.config      = config 
         self.login_info  = self.config.get("login", {})
         self.settings    = self.config.get("settings", {})
+        self.folder      = self.settings.get("module_folder", "main_modules")
         self.subscribers = collections.defaultdict(list)
         self.db_name     = self.settings.get("database", ":memory:")
         self.database    = sqlite3.connect(self.db_name)
@@ -79,7 +83,10 @@ class Cloudjumper(irc.IRCBot):
                 "use_ssl": self.settings.get("use_ssl", False)
             })
 
-        for cls in modules:
+        if not modules:
+            return
+        self.modules = modules.load_folder(self.folder)
+        for cls in self.modules:
             if hasattr(cls, "name"):
                 config = self.get_config(cls.name)
             else:
@@ -89,8 +96,6 @@ class Cloudjumper(irc.IRCBot):
             except:  # I hate broad exception clauses.
                 self.logger.debug("[Class '{}' failed in __init__]".format(cls))
                 traceback.print_exc()
-
-
 
     def tables(self):
         self.cursor.execute("""

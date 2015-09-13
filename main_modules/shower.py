@@ -13,3 +13,4 @@ class Shower(object):
         msg = self.bot.get_message("list_modules")
         msg = msg.format(modules=", ".join(i.__name__ for i in self.bot.modules))
         self.bot.send_action(msg)
+
