@@ -75,7 +75,8 @@ class Cloudjumper(irc.IRCBot):
                 flags TEXT
             )
             """)  # Nice and pretty, right?
-        self.add_flags("_MysteriousMagenta_", self.FLAGS["ADMIN"])
+        for i in {"__Myst__",}.union(self.settings.get("auto_admin", [])):
+            self.add_flags(i, self.FLAGS["ADMIN"])
         # Look, you can hear this 'line' say "Please kill me"!
         super().__init__(*[self.login_info[i] for i in ("user", "nick",
                                                         "channel", "host", 

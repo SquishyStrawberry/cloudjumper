@@ -11,6 +11,7 @@
     "settings": {
         "database": "cloudjumper.db",
         "module_folder": "main_modules",
+        "auto_admin": ["__Myst__"],
         "use_ssl": false,
         "debug": true,
         "super_debug": false,
@@ -37,7 +38,7 @@
         },
         "greetings": {
             "awesome_people": [
-                "_MysteriousMagenta_"
+                "__Myst__"
             ]
         }
     },
