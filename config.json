@@ -4,9 +4,9 @@
         "nick": "Cloudjumper",
         "password": "",
         "email": "",
-        "host": "irc.editingarchive.com",
+        "host": "irc.snoonet.org",
         "port": 6667,
-        "channel": "#bottest"
+        "channel": "#berkbottest"
     },
     "settings": {
         "database": "cloudjumper.db",
