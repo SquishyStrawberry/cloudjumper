@@ -78,13 +78,6 @@ class Cloudjumper(irc.IRCBot):
                                                         "port")], **{
                 "use_ssl": self.settings.get("use_ssl", False)
             })
-        if self.login_info.get("password"):
-            if self.settings.get("register", False):
-                self.register(self.login_info["password"], 
-                              self.login_info.get("email") or None, 
-                              True)
-            else:
-                self.login(self.login_info["password"])
 
         for cls in modules:
             if hasattr(cls, "name"):
@@ -134,6 +127,13 @@ class Cloudjumper(irc.IRCBot):
         return block_data
 
     def join_channel(self, channel):
+        if not self.logged_in and self.login_info.get("password"):
+            if self.settings.get("register", False):
+                self.register(self.login_info["password"], 
+                              self.login_info.get("email") or None, 
+                              True)
+            else:
+                self.login(self.login_info["password"])
         super().join_channel(channel)
         for spect in self.subscribers[self.PUBLISHERS["CONNECT"]]:
             spect["handler"](self.nick, [])
