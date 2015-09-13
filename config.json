@@ -11,7 +11,7 @@
     "settings": {
         "database": "cloudjumper.db",
         "use_ssl": false,
-        "debug": true,
+        "debug": false,
         "super_debug": false,
         "register": false
     },

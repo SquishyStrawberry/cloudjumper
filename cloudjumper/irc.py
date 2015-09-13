@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import collections
 import logging
 import re
 import socket
@@ -17,6 +18,9 @@ class IRCBot(object):
     color_finder = "\x1f|\x02|\x12|\x0f|\x16|\x03(?:\d{1,2}(?:,\d{1,2})?)?"
     color_finder = re.compile(color_finder, re.UNICODE)
     logger = logging.getLogger(__name__)
+    join_strings = collections.defaultdict(lambda: "end of /motd", **{
+        "irc.snoonet.org": "end of message of the day"
+    })
 
     def __init__(self, user, nick, channel, host, port=None, **kwargs):
         """
@@ -37,6 +41,8 @@ class IRCBot(object):
             port = 6667
             if kwargs.get("use_ssl", False):
                 port += 30  # Default SSL port is 6697
+        self.host         = host
+        self.port         = port
         self.connection   = (host, port)
         self.user         = user
         self.nick         = nick
@@ -63,7 +69,7 @@ class IRCBot(object):
                 self.logger.debug("[Set USER and NICK]")
                 self.send("USER {0} 0 * :{0}\r\n".format(self.user))
                 self.send("NICK {}\r\n".format(self.nick))
-            elif "end of /motd" in block.lower():
+            elif self.join_strings[self.host].lower() in block.lower():
                 self.join_channel(self.base_channel)
                 self.started = True
                 return
