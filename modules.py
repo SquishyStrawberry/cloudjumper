@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-def load_folder(folder):
+def get_modules(folder):
     # I seriously had no idea how to implement this
     if folder == "main_modules":
         from main_modules.calc             import Calculator

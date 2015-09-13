@@ -85,7 +85,7 @@ class Cloudjumper(irc.IRCBot):
 
         if not modules:
             return
-        self.modules = modules.load_folder(self.folder)
+        self.modules = modules.get_modules(self.folder)
         for cls in self.modules:
             if hasattr(cls, "name"):
                 config = self.get_config(cls.name)
