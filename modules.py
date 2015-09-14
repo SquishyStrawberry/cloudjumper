@@ -5,6 +5,7 @@ def get_modules(folder):
     # I seriously had no idea how to implement this
     if folder == "main_modules":
         from main_modules.calc             import Calculator
+        from main_modules.dice             import Dice
         from main_modules.entering         import Enterer
         from main_modules.flagging         import Flagging
         from main_modules.greeter_attacker import Attacker
@@ -22,6 +23,7 @@ def get_modules(folder):
             Terminator,
             Thief,
             UrlTitle,
+            Dice,
             Flagging,
             Learning,
             Greeter,
